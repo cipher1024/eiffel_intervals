@@ -28,7 +28,9 @@ feature
 			f: ROOT_OF_NUMBERS
 			x, y: NUMBER_INTERVAL [REAL_64]
 			ls: LIST [NUMBER_INTERVAL [REAL_64]]
+			fmt: FORMAT_DOUBLE
 		do
+			create fmt.make (10, 10)
 			create f.make (2.0)
 			y.set (0.0, 2.0)
 			x := f.root (y, .1)
@@ -51,11 +53,14 @@ feature
 			io.put_string (x.out)
 			io.new_line
 
-			ls := f.all_roots (y, .00001)
+			y.set (-2, 5)
+			ls := f.all_roots (y, .000000001)
 			io.put_string ("begin  ")
 			io.new_line
 			across ls as it loop
 				io.put_string ("  " + it.item.out)
+				io.new_line
+				io.put_string ("  " + it.item.repr + " (" + fmt.formatted (it.item.imprecision) + ") ")
 				io.new_line
 			end
 			io.put_string ("end  ")

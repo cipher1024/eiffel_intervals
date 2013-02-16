@@ -2,6 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="currency-soln" uuid="DB115CCA-378C-4D57-8882-F702262C5A99">
 	<target name="currency-soln">
 		<root class="ROOT" feature="make"/>
+		<file_rule>
+			<exclude>.git</exclude>
+			<exclude>EIFGEN</exclude>
+			<exclude>.svn</exclude>
+		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>

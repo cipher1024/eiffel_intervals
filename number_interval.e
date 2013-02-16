@@ -55,6 +55,52 @@ feature -- Access
 			Result := (first + last) / two
 		end
 
+	repr: STRING
+		local
+			i,j: INTEGER
+			s,t: STRING
+		do
+			s := first.out
+			t := last.out
+			from
+				i := 0
+			invariant
+				0 <= i and i <= s.count.min (t.count)
+				across 1 |..| i as x all s [x.item] = t [x.item] end
+			until
+				   i = s.count.min (t.count)
+				or else s [i+1] /= t [i+1]
+			loop
+				i := i + 1
+			variant
+				s.count.min (t.count) - i
+			end
+			from
+				j := 0
+			invariant
+				0 <= j and j <= s.count.min (t.count)
+				across 1 |..| j as x all s [s.count + 1 - x.item] = t [t.count + 1 - x.item] end
+			until
+				   i = s.count.min (t.count)
+				or else s [s.count - j] /= t [t.count - j]
+			loop
+				j := j + 1
+			variant
+				s.count.min (t.count) - j
+			end
+			if i = 0 then
+				Result := "0"
+			elseif s.count.min (t.count) < i + j then
+				if s.count <= t.count then
+					Result := s
+				else
+					Result := t
+				end
+			else
+				Result := s.substring (1, i) + s.substring (s.count + 1 - j, s.count)
+			end
+		end
+
 feature -- Comparison
 
 	is_less alias "<" (other: NUMBER_INTERVAL [G]): BOOLEAN
@@ -75,6 +121,24 @@ feature -- Comparison
 	intersects (other: NUMBER_INTERVAL [G]): BOOLEAN
 		do
 			Result := first.max (other.first) <= last.min (other.last)
+		end
+
+	union (other: NUMBER_INTERVAL [G]): NUMBER_INTERVAL [G]
+		require
+			intersects (other)
+		do
+			Result := new_interval (first.min (other.first), last.max (other.last))
+		ensure
+			-- forall x, x in Result <=> x in Current \/ x in other
+		end
+
+	intersection (other: NUMBER_INTERVAL [G]): NUMBER_INTERVAL [G]
+		require
+			intersects (other)
+		do
+			Result := new_interval (first.max (other.first), last.min (other.last))
+		ensure
+			-- forall x, x in Result <=> x in Current /\ x in other
 		end
 
 feature -- Basic operation
